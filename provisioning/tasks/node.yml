@@ -1,0 +1,25 @@
+---
+# Install Node 20.x via Nodesource (baseline)
+- name: Add NodeSource 20.x repo and install nodejs
+  shell: |
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+    apt-get install -y nodejs
+  args:
+    executable: /bin/bash
+
+# Pin npm ke versi target
+- name: Install npm {{ npm_version }} globally
+  shell: npm install -g "npm@{{ npm_version }}"
+
+# Pin Node ke 20.13.1 dengan 'n' (agar exact)
+- name: Install n (Node version manager)
+  shell: npm install -g n
+
+- name: Install Node {{ node_version }} via n
+  shell: n "{{ node_version }}"
+
+# Pastikan symlink /usr/local/bin/node dipakai (umumnya otomatis oleh 'n')
+- name: Rehash shell (noop but keeps step explicit)
+  shell: hash -r
+  args:
+    executable: /bin/bash

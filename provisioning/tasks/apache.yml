@@ -1,0 +1,47 @@
+---
+- name: Install Apache
+  apt:
+    name: apache2
+    state: present
+    update_cache: yes
+
+- name: Enable required Apache modules
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - rewrite
+    - proxy_fcgi
+    - setenvif
+  notify: Restart Apache
+
+- name: Enable PHP-FPM config for Apache
+  command: a2enconf "php{{ php_version }}-fpm"
+  notify: Restart Apache
+
+- name: Write Laravel vhost
+  copy:
+    dest: /etc/apache2/sites-available/laravel.conf
+    content: |
+      <VirtualHost *:80>
+          ServerName {{ server_name }}
+          DocumentRoot {{ laravel_project_path }}/public
+
+          <Directory {{ laravel_project_path }}/public>
+              AllowOverride All
+              Require all granted
+              Options Indexes FollowSymLinks
+          </Directory>
+
+          ErrorLog ${APACHE_LOG_DIR}/laravel_error.log
+          CustomLog ${APACHE_LOG_DIR}/laravel_access.log combined
+      </VirtualHost>
+  notify: Restart Apache
+
+- name: Enable Laravel site
+  command: a2ensite laravel.conf
+  notify: Restart Apache
+
+- name: Disable default site
+  command: a2dissite 000-default.conf
+  notify: Restart Apache

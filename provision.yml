@@ -1,0 +1,19 @@
+---
+- hosts: all
+  become: yes
+  become_flags: '-H -S -n'
+  vars_files:
+    - provisioning/vars/main.yml
+  handlers:
+    - import_tasks: provisioning/handlers/main.yml
+  tasks:
+    - include_tasks: provisioning/tasks/php.yml
+    - include_tasks: provisioning/tasks/apache.yml
+    - include_tasks: provisioning/tasks/composer.yml
+    - include_tasks: provisioning/tasks/laravel.yml
+    - include_tasks: provisioning/tasks/node.yml
+    - include_tasks: provisioning/tasks/verify.yml
+    - include_tasks: provisioning/tasks/mysql.yml
+
+
+

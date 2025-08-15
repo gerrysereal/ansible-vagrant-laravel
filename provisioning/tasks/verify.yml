@@ -1,0 +1,22 @@
+---
+- name: Apache version
+  command: apache2 -v
+  register: apache_version
+
+- name: debug
+  debug:
+    msg: "Server version: {{ apache_version.stderr }}"
+
+- name: PHP version
+  command: php -v
+  register: php_version
+
+- name: debug
+  debug:
+    msg: "{{ php_version.stdout_lines[0] }}"
+
+- name: Composer version
+  command: composer --version
+  register: composer_version
+  async: 300  # Timeout 5 menit
+  poll: 10    # Cek setiap 10 detik

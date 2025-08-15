@@ -1,0 +1,52 @@
+---
+- name: Install MySQL packages
+  apt:
+    name:
+      - mysql-server
+      - mysql-client
+      - python3-pymysql
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Start MySQL service
+  service:
+    name: mysql
+    state: started
+    enabled: true
+  become: true
+
+- name: Set MySQL root password
+  command: |
+    mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '{{ mysql_root_password }}'; FLUSH PRIVILEGES;"
+  become: true
+  register: set_root_pw
+  changed_when: "'ALTER USER' in set_root_pw.stdout"
+
+- name: Create .my.cnf
+  copy:
+    dest: /root/.my.cnf
+    content: |
+      [client]
+      user=root
+      password={{ mysql_root_password }}
+    mode: "0600"
+  become: true
+
+- name: Create Laravel database
+  mysql_db:
+    name: laravel
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  become: true
+
+- name: Create Laravel database user
+  mysql_user:
+    name: laravel
+    password: "{{ mysql_db_password }}"
+    priv: "laravel.*:ALL"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  become: true

@@ -1,0 +1,39 @@
+---
+- name: Restart Apache
+  service:
+    name: apache2
+    state: restarted
+    enabled: yes
+
+- name: Restart PHP-FPM
+  service:
+    name: "php{{ php_version }}-fpm"
+    state: restarted
+    enabled: yes
+
+- name: Restart MySQL
+  service:
+    name: mysql
+    state: restarted
+    enabled: yes
+    become: yes
+  async: 30
+  poll: 10
+
+- name: Fix Laravel Storage Permissions
+  file:
+    path: "{{ laravel_project_path }}/storage"
+    state: directory
+    mode: '0775'
+    owner: www-data
+    group: www-data
+    recurse: yes
+
+- name: Fix Laravel Cache Permissions
+  file:
+    path: "{{ laravel_project_path }}/bootstrap/cache"
+    state: directory
+    mode: '0775'
+    owner: www-data
+    group: www-data
+    recurse: yes

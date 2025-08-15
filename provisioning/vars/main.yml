@@ -1,0 +1,11 @@
+---
+# Versi Software
+php_version: "8.2"
+node_version: "20.13.1"
+npm_version: "10.5.2"
+mysql_root_password: "Rootpass123"
+mysql_db_password: "Laravelpass123"
+
+# Konfigurasi Proyek
+laravel_project_path: /var/www/html
+server_name: "192.168.56.10"

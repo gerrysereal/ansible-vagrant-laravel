@@ -44,16 +44,20 @@ Sebelum mulai, pastikan Anda sudah menginstal:
     
 
 
-## Structure Folder
-    ansible-vagrant-laravel/
+### Struktur Folder
+
+Struktur direktori proyek ini dirancang agar mudah dipahami dan dikelola, memisahkan peran dan konfigurasi dengan jelas.
+
+```
+ansible-vagrant-laravel/
 ├── .gitignore
-├── Vagrantfile         # Konfigurasi utama untuk Vagrant (VM, Jaringan, Ansible)
-├── inventory.ini       # Inventory Ansible untuk mendefinisikan host (VM)
-├── provision.yml       # Playbook utama Ansible yang memanggil semua task
+├── Vagrantfile               # Konfigurasi utama untuk Vagrant (VM, Jaringan, Ansible)
+├── inventory.ini             # Inventory Ansible untuk mendefinisikan host (VM)
+├── provision.yml             # Playbook utama Ansible yang memanggil semua task
 └── provisioning/
     ├── handlers/
-    │   └── main.yml    # Handler untuk service (contoh: restart apache)
-    ├── tasks/          # Direktori berisi semua file task Ansible
+    │   └── main.yml          # Handler untuk service (misal: restart apache)
+    ├── tasks/                # Direktori berisi semua file task Ansible
     │   ├── apache.yml
     │   ├── composer.yml
     │   ├── laravel.yml
@@ -61,7 +65,8 @@ Sebelum mulai, pastikan Anda sudah menginstal:
     │   ├── php.yml
     │   └── verify.yml
     └── vars/
-        └── main.yml     # Semua variabel yang digunakan dalam playbook
+        └── main.yml          # Semua variabel yang digunakan dalam playbook
+```
 
 ## Cara menjalankan
 1. Provisioning ulang (kalau ada perubahan skrip)
